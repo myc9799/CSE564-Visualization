@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Detailed Performance</title>
+        <link href="https://fonts.googleapis.com/css?family=Bellefair&amp;subset=latin-ext" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="css/main.css"> 
+        <link rel="stylesheet" href="css/menu.css">
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <style>
+                .button {
+                  background-color: #c24040;
+                  border: none;
+                  color: #dbdbdb;
+                  padding: 10px 25px;
+                  text-align: center;
+                  text-decoration: none;
+                  display: inline-block;
+                  font-family: 'Bellefair', serif;
+                  font-size: 18px;
+                  margin: 10px 20px;
+                  transition-duration: 0.4s;
+                  cursor: pointer;
+                }
+                
+                .button1 {
+                  background-color: #dbdbdb; 
+                  color: black; 
+                  border: 2px solid #c24040;
+                }
+                
+                .button1:hover {
+                  background-color: #c24040;
+                  color: #dbdbdb;
+                }
+        </style>
+    </head>
+
+    <body>
+        <div class="hero">
+            <div class="front-content">
+                <h1>Detailed Performance</h1>
+            </div>
+        </div>
+    <button class="button button1" onclick="update1('Crossing')">Crossing</button>
+    <button class="button button1" onclick="update1('Finishing')">Finishing</button>
+    <button class="button button1" onclick="update1('LongPassing')">LongPassing</button>
+    <button class="button button1" onclick="update1('ShortPassing')">ShortPassing</button>
+    <button class="button button1" onclick="update1('Dribbling')">Dribbling</button>
+    <button class="button button1" onclick="update1('Jumping')">Jumping</button>
+
+    <button class="button button1" onclick="update1('BallControl')">BallControl</button>
+    <button class="button button1" onclick="update1('Volleys')">Volleys</button>
+    <button class="button button1" onclick="update1('Curve')">Curve</button>
+    <button class="button button1" onclick="update1('Acceleration')">Acceleration</button>
+    <button class="button button1" onclick="update1('SprintSpeed')">SprintSpeed</button>
+    <button class="button button1" onclick="update1('Agility')">Agility</button>
+    <button class="button button1" onclick="update1('Reactions')">Reactions</button>
+    <button class="button button1" onclick="update1('Balance')">Balance</button>
+    <button class="button button1" onclick="update1('ShotPower')">ShotPower</button>
+   
+    <button class="button button1" onclick="update1('Stamina')">Stamina</button>
+    <button class="button button1" onclick="update1('Strength')">Strength</button>
+    <button class="button button1" onclick="update1('LongShots')">LongShots</button>
+    <button class="button button1" onclick="update1('Aggression')">Aggression</button>
+    <button class="button button1" onclick="update1('Interceptions')">Interceptions</button>
+    <button class="button button1" onclick="update1('Positioning')">Positioning</button>
+    <button class="button button1" onclick="update1('Vision')">Vision</button>
+    <button class="button button1" onclick="update1('Penalties')">Penalties</button>
+    <button class="button button1" onclick="update1('Composure')">Composure</button>
+    <button class="button button1" onclick="update1('Marking')">Marking</button>
+
+    <button class="button button1" onclick="update1('StandingTackle')">StandingTackle</button>
+    <button class="button button1" onclick="update1('SlidingTackle')">SlidingTackle</button>
+
+    <button class="button button1" onclick="update1('HeadingAccuracy')">HeadingAccuracy</button>
+    <button class="button button1" onclick="update1('FKAccuracy')">FKAccuracy</button>
+    <div id="my_dataviz"></div>
+    <script>
+      var margin = {top: 100, right: 100, bottom: 100, left: 100},
+                    width = 1400 - margin.left - margin.right,
+                    height = 700 -margin.top - margin.bottom;
+      var svg = d3.select("#my_dataviz")
+                .append("svg:svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+      function update1(name) {
+        svg.selectAll("*").remove()
+        var x = d3.scaleLinear()
+                  .domain([0, 100])
+                  .range([0, width]);
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+        var y = d3.scaleLinear()
+                  .range([height, 0]);
+        var yAxis = svg.append("g")
+              .attr("class", "myYaxis");
+        d3.csv("https://raw.githubusercontent.com/myc9799/CSE564-Visualization/master/fifa.csv", function(data) {
+          function update(nBin) {
+            var histogram = d3.histogram()
+                    .value(function(d) { return d[name]; }) 
+                    .domain(x.domain())
+                    .thresholds(x.ticks(nBin));
+            var bins = histogram(data);
+            y.domain([0, d3.max(bins, function(d) { return d.length; })]); 
+            yAxis.call(d3.axisLeft(y));
+            svg.append("text")
+               .attr("transform", "translate(" + (width/2) + "," + (height + margin.bottom) + ")")
+               .style("text-anchor", "middle")
+               .text(name)
+               .attr("font-size", "20px");
+            svg.append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("y", 10 - margin.left)
+              .attr("x", 0 - (height/2))
+              .attr("dy", "1em")
+              .style("text-anchor" , "middle")
+              .text("Count")
+              .attr("font-size", "20px");
+            var u = svg.selectAll("rect").data(bins)
+                  u
+                    .enter()
+                    .append("rect") 
+                    .merge(u)
+                    .attr("x", 1)
+                    .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+                    .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+                    .attr("height", function(d) { return height - y(d.length); })
+                    .style("fill", "#c24040")
+                  u
+                    .exit()
+                    .remove()
+              
+            }
+          var defau = 35;
+          update(defau);
+          d3.selectAll("div").on("mousedown", function() {
+            var startPoint;
+            var endPoint;
+            var div = d3.select(this).classed("active", true);
+            var w = d3.select(window)
+                      .on("mousedown", mousedown)
+                      .on("mouseup", mouseup);
+            function mousedown() {
+              startPoint = d3.event.pageX;
+              console.log("start:"+startPoint);
+            }
+            function mouseup() {
+              div.classed("active", false);
+              w.on("mousedown", null).on("mouseup", null);
+              endPoint = d3.event.pageX;
+              console.log("end:"+endPoint);
+              if(startPoint > endPoint){
+                console.log("left");
+                defau = defau - 3;
+                update(defau);
+              }
+              if(startPoint < endPoint) {
+                console.log("right");
+                defau = defau + 3;
+                update(defau);
+                }
+              }
+                });
+          });
+        }
+            
+        update1('Crossing')
+      </script>
+    </body>  
+</html>

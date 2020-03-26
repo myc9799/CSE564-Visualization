@@ -1,0 +1,64 @@
+html
+{
+    font-size: 10px !important;
+}
+
+body
+{
+    font-family: 'Bellefair', serif;
+    font-weight: 300;
+    font-style: normal;
+    overflow-x: hidden;
+    color: #111;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,a
+{
+    font-family: 'Bellefair', serif;
+    font-weight: normal;
+    color: #111;
+}
+
+h1
+{
+    font-size: 6rem;
+}
+
+.hero
+{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.hero .front-content
+{
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    margin: 25vh 0 10vh 0;
+    padding: 0 30px;
+    text-align: center;
+}
+
+.hero .front-content h1
+{
+    line-height: 1.7em;
+    margin: 0;
+}
+
+.hero .front-content h1 span
+{
+    line-height: 1.4em;
+    display: inline-block;
+    padding: 0 4rem;
+    color: #fff;
+    border-radius: 100px;
+    background: #c24040;
+}
