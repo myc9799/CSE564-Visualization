@@ -1,0 +1,224 @@
+html {
+      font-family: "Open Sans";
+      font-style: normal;
+      font-variant: normal;
+      font-weight: 500;
+      color: #5c6363;
+      background: #f5f5f5;
+
+    }
+
+    .row {
+      clear: both;
+      overflow: hidden;
+    }
+
+    h1 {
+      color: #5c6363;
+    }
+
+    h2 {
+      color: #999;
+      padding: 5px;
+      line-height: 1.5em;
+      margin: 0;
+    }
+
+    p {
+      text-align: center;
+    }
+
+    #table table {
+      width: 90%;
+      margin: auto;
+    }
+
+    #counter_table {
+      float: left;
+    }
+
+    #counter_table table {
+      width: 500px;
+      margin-right: 50px;
+      margin-top: 40px;
+      margin-left: 20px;
+    }
+
+    thead tr {
+      color: #999;
+    }
+
+    tbody tr {
+      height: 40px;
+
+    }
+
+    tbody td {
+      border-bottom: 1px solid #f5f5f5;
+    }
+
+    td .legend {
+      border-radius: 50%;
+      height: 20px;
+      width: 20px;
+      display: block;
+    }
+
+    th.value {
+      width: 30px;
+    }
+
+    th {
+      text-transform: uppercase;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .main {
+      width: 900px;
+      margin: auto;
+    }
+
+    .y.axis .tick line {
+      stroke-width: 1;
+      stroke: rgba(0, 0, 0, 0.2);
+      fill:"#5c6363";
+      font-family: 'Open Sans', sans-serif;
+
+    }
+
+    .y.axis path.domain {
+      stroke: none;
+    }
+
+    polyline{
+    opacity: .3;
+    stroke: black;
+    stroke-width: 2px;
+    fill:None;
+}
+
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: grey;
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+    }
+
+#first_country{
+	position:absolute;
+	top:230px;
+	left:250px;
+	width:800px;
+	height: 450px;
+}
+
+#first_sex {
+	position:absolute;
+	top:480px;
+	left:250px;
+	width:350px;
+	height:350px;
+}
+
+#first_age {
+	position:absolute;
+	top:480px;
+	left:680px;
+	width:350px;
+	height:350px;
+}
+
+#second_sex {
+	position:absolute;
+	top:220px;
+	left:870px;
+	width:180px;
+	height:180px;
+}
+
+#second_age {
+	position:absolute;
+	top:490px;
+	left:870px;
+	width:180px;
+	height:180px;
+}
+
+#line_chart {
+	position:absolute;
+	top:250px;
+	left:250px;
+	width:500px;
+	height:1100px;
+}
+
+.slider{
+    background: #dedede;
+    position:absolute;
+	top:150px;
+	color: #5c6363;
+	font-size: 13px;
+	font-family: 'Open Sans', sans-serif
+}
+
+.line {
+  fill: none;
+  stroke: #a8c9c1;
+  stroke-width: 5px;
+}
+
+.overlay {
+  fill: none ;
+  pointer-events: all;
+}
+
+.focus circle {
+  fill: #F1F3F3;
+  stroke: #a8c9c1;
+  stroke-width: 5px;
+}
+
+.hover-line {
+  stroke: #a8c9c1;
+  stroke-width: 2px;
+  stroke-dasharray: 3,3;
+}
+
+
+
+
+
+
+
+
+
+
+.tick line{
+        opacity: 0.2;
+        stroke: #9b9999;
+    }
+    .axis--x path {
+      stroke: gray;
+      stroke-width: 1.5px;
+    }
+    .svg-chart-line {
+        fill: none;
+        stroke: #a8c9c1;
+        stroke-width: 2.5px;
+    }
+
+    .svg-tooltip {
+      position: absolute;
+
+    text-align: center;
+      border-radius: 2px;
+      border: 1px solid #708782;
+      fill: #708782;
+      font-family: Open Sans;
+      pointer-events: none;
+      font-size: 10px;
+      background-color: white;
+    }

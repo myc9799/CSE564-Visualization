@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+    <link rel="stylesheet" href="../static/css/menu.css">
+    <link rel="stylesheet" href="../static/css/worldmap.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <script src="../static/topojson.v1.min.js"></script>
+    <script src="../static/worldmap.js"></script>
+    <script src="../static/line_chart.js"></script>
+    <script src="../static/corr.js"></script>
+
+    <script src="../static/json/Brazil.json"></script>
+    <script src="../static/json/France.json"></script>
+    <script src="../static/json/Germany.json"></script>
+    <script src="../static/json/Japan.json"></script>
+    <script src="../static/json/Poland.json"></script>
+    <script src="../static/json/RepublicofKorea.json"></script>
+    <script src="../static/json/RussianFederation.json"></script>
+    <script src="../static/json/Ukraine.json"></script>
+    <script src="../static/json/UnitedKingdom.json"></script>
+    <script src="../static/json/UnitedStates.json"></script>
+    <script src="../static/json/world.json"></script>
+    <script src="../static/json/gdp.json"></script>
+    <script src="../static/json/pop.json"></script>
+    <script src="../static/json/world-topo-min.json"></script>
+
+</head>
+
+<body>
+    <div class="main">
+
+        <h1>Data Visualization of Suicide Data</h1>
+
+        <ul class="menu">
+            <li><a href="#"><i class="icon"></i>Worldwide Data</a></li>
+            <li><a href="#"><i class="icon"></i>Country Data</a></li>
+            <li><a href="#"><i class="icon"></i>Year Trend</a></li>
+            <li><a href="#"><i class="icon"></i>Exploration</a></li>
+        </ul>
+
+        <form action="#" class="slider" method="post" id="_slider" >
+            <label for="year_slider">Please select a year: </label>
+            <input type="range" min=1987 max=2016 step=1 name="year_slider" id="year_slider" value=2016 oninput="selected_year.value = year_slider.value">
+            <output name="selected_year" id="selected_year">2016</output>
+        </form>
+
+        <div class="row" id="myc">
+            <div class="col-sm-10 mx-auto">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='first_country.js') }}"></script>
+    <script src="{{ url_for('static', filename='first_sex.js') }}"></script>
+    <script src="{{ url_for('static', filename='first_age.js') }}"></script>
+    <script src="{{ url_for('static', filename='second_sex.js') }}"></script>
+    <script src="{{ url_for('static', filename='second_age.js') }}"></script>
+
+    <script>
+    var slider = document.getElementById('year_slider');
+     d3.select("#_slider").attr("class","hidden")
+
+    slider.addEventListener('input', function(){
+
+        setInterval(function query() {
+            $.ajax({
+                url: "update",
+                type: "POST",
+                data: slider.value,
+                dataType: "text"
+            })
+        }, 1000); });
+
+
+
+    var list = document.getElementsByClassName('menu');
+
+    for (i = 0; i < list.length; i++) {
+        list[i].addEventListener('click',function(event){
+            event = event || window.event;
+            var target = event.target || event.srcElement;
+
+            switch(target.text){
+
+
+                case "Country Data" :
+
+                    d3.select("#_slider")
+                        .attr("class","hidden")
+
+                    if (!d3.select('#select_button').empty()) {
+                        d3.select("#select_button").attr("class","hidden");
+                    }
+
+                    d3.selectAll("svg").remove();
+                    world_map();
+
+                    var second_sex_url = "{{ url_for('get_second_sex') }}";
+                    var second_age_url = "{{ url_for('get_second_age') }}";
+
+                    queue()
+                        .defer(d3.json, second_sex_url)
+                        .defer(d3.json, second_age_url)
+                        .await(ready2);
+
+                    function ready2(error2, sex_data_2, age_data_2) {
+                        sex_chart_2(sex_data_2);
+                        age_chart_2(age_data_2);
+                     }
+                     break;
+
+                case "Exploration" :
+                    d3.select("#_slider").attr("class","hidden");
+                    if (!d3.select('#select_button').empty()) {
+                        d3.select("#select_button").attr("class","hidden");
+                    }
+
+                    d3.selectAll("svg").remove();
+                    corr();
+                    break;
+
+                case "Worldwide Data" :
+
+                    d3.select("#_slider")
+                        .attr("class","slider")
+
+                    if (!d3.select('#select_button').empty()) {
+                        d3.select("#select_button").attr("class","hidden");
+                    }
+
+                    d3.selectAll("svg").remove();
+                    var first_country_url = "{{ url_for('get_first_country') }}";
+                    var first_sex_url = "{{ url_for('get_first_sex') }}";
+                    var first_age_url = "{{ url_for('get_first_age') }}";
+
+                    queue()
+                        .defer(d3.json, first_country_url)
+                        .defer(d3.json, first_sex_url)
+                        .defer(d3.json, first_age_url)
+                        .await(ready1);
+
+                    function ready1(error1, country_data_1, sex_data_1, age_data_1) {
+                        country_chart_1(country_data_1);
+                        sex_chart_1(sex_data_1);
+                        age_chart_1(age_data_1);
+                     }
+                     break;
+
+                case "Year Trend" :
+                    d3.select("#_slider").attr("class","hidden");
+                    d3.selectAll("svg").remove();
+                    d3.json("../static/json/world.json", function(error, world)
+                    {data = world;line_chart(data);});
+
+                    if (d3.select('#select_button').empty()){
+                        var parent = document.getElementById('line_chart');
+                        var button = document.createElement("select");
+                        button.style.color = '#a8c9c1';
+                        button.setAttribute("id", "select_button");
+
+                        parent.appendChild(button);
+
+                        var country_names = ['RussianFederation','UnitedStates','Japan','France','Ukraine','Germany',
+                                             'RepublicofKorea','Brazil','Poland','UnitedKingdom','world'];
+
+                        d3.select("#select_button")
+                            .selectAll('myOptions')
+                            .data(country_names)
+                            .enter()
+                            .append('option')
+                            .text(function (d) { return d; })
+                            .attr("value", function (d) { return d; })
+
+                    }
+                    else{
+                        d3.select('#select_button').attr("class","");
+                    }
+
+                    function update(selectedGroup) {
+                         PATH = "../static/json/"+selectedGroup+".json";
+                         d3.selectAll("svg").remove();
+                         d3.json(PATH, function(error, d)
+                            {data = d;line_chart(data);});
+                    }
+
+                    d3.select("#select_button").on("change", function(d) {
+                        var selectedOption = d3.select(this).property("value")
+                        update(selectedOption)
+                    })
+                    break;
+            }
+        })
+    }
+
+
+</script>
+
+</body>
+
+</html>
